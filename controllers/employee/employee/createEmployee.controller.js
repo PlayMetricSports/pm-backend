@@ -1,0 +1,96 @@
+const Employee = require("@/models/employee/employee.model");
+const User = require("@/models/account/user.model");
+const UserRole = require("@/models/account/userRole.model");
+const { encryptPassword } = require("@/security/rsa.keys.security");
+const UserDepartment = require("@/models/account/user-department.model");
+const RollbackManager = require('@/services/rollBack.service')
+const rollback = new RollbackManager();
+const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
+
+const CreateEmployeeController = async (request, response) => {
+    const { firstName, middleName, lastName, email, countryCode, mobileNumber, department, userRole, organization, employeeCode, designation } = request.body
+    const password = encryptPassword(process.env.USER_PASSWORD);
+    let user, employee;
+
+    try {
+
+        const getUserRole = await UserRole.findOne({ userRoleKey: userRole, userRoleStatus: "active" }).select("userRoleName userType actionIds _id");
+
+        if (!getUserRole) {
+            return response.status(200).json(
+                createErrorResponse(409, "popup", "Role Conflict: User creation failed"));
+        }
+
+        const getUserDepartment = await UserDepartment.findOne({ departmentKey: department, departmentStatus: "active" }).select("_id");
+
+        if (!getUserDepartment) {
+            return response.status(200).json(
+                createErrorResponse(409, "popup", "Please input valid user-department."));
+        }
+
+
+        user = await User.create({
+            name: {
+                firstName: firstName,
+                middleName: middleName,
+                lastName: lastName
+            },
+            email: { address: email },
+            loginEmail: { address: email },
+            password: password,
+            userType: getUserRole?.userType,
+            userRoleId: getUserRole?._id || "",
+            userDepartmentId: getUserDepartment?._id,
+            actionIds: getUserRole?.actionIds || []
+        });
+
+        if (user?._id) {
+            rollback.add(async () => {
+                await User.deleteOne({ _id: user._id });
+            });
+
+
+
+            employee = await Employee.create({
+                employeeCode: employeeCode,
+                organization: organization,
+                designation: designation,
+                mobileNumber: { countryCode: countryCode, number: mobileNumber },
+                userId: user?._id,
+                userRoleId: getUserRole?._id,
+                userRoleName: getUserRole?.userRoleName,
+            });
+
+            if (employee?._id) {
+                rollback.add(async () => {
+                    await Employee.deleteOne({ _id: employee._id });
+                });
+
+
+
+                const data = {
+                    userId: user?._id,
+                    employeeId: employee?._id,
+                    employeeCode: employee?.employeeCode
+                };
+                rollback.clear();
+                return response.status(200).json(
+                    createSuccessResponse(200, data, "Employee successfully created."));
+            } else {
+                await rollback.rollback();
+                return response.status(200).json(
+                    createErrorResponse(400, "popup", "Employee creation failed."));
+            }
+        }
+
+        await rollback.rollback();
+        return response.status(200).json(
+            createErrorResponse(400, "popup", "Employee not created by the server."));
+    } catch (error) {
+        await rollback.rollback();
+        return response.status(500).json(
+            createErrorResponse(500, "popup", `Error: ${error}`));
+    }
+};
+
+module.exports = CreateEmployeeController;

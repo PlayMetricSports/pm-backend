@@ -1,0 +1,205 @@
+/**
+ * ============================
+ * 🧩 SWAGGER-AUTOGEN TEMPLATE (MASTER TEMPLATE)
+ * ============================
+ */
+
+// #swagger.tags = ['{{TAG}}']
+// #swagger.summary = '{{SHORT_SUMMARY}}'
+// #swagger.description = '{{DETAILED_DESCRIPTION}}'
+
+/* ============================
+   📌 PATH PARAMS
+============================ */
+// #swagger.parameters['id'] = {
+//   in: 'path',
+//   description: '{{ID_DESCRIPTION}}',
+//   required: true,
+//   type: 'string',
+//   example: '64f1a2b3c4d5e6f7890abc12'
+// }
+
+/* ============================
+   🔍 QUERY PARAMS
+============================ */
+// #swagger.parameters['page'] = {
+//   in: 'query',
+//   description: 'Page number',
+//   required: false,
+//   type: 'integer',
+//   example: 1
+// }
+
+/* ============================
+   📦 REQUEST BODY
+============================ */
+// #swagger.requestBody = {
+//   required: true,
+//   schema: {
+//     key1: 'value',
+//     key2: 'value'
+//   }
+// }
+
+/* ============================
+   ✅ SUCCESS RESPONSE
+============================ */
+// #swagger.responses[200] = {
+//   description: '{{SUCCESS_MESSAGE}}',
+//   schema: {
+//     code: 200,
+//     success: true,
+//     data: {},
+//     error: [],
+//     message: '{{SUCCESS_MESSAGE}}'
+//   }
+// }
+
+/* ============================
+   ❌ LOGICAL FAILURE
+============================ */
+// #swagger.responses[200.1] = {
+//   description: '{{BUSINESS_ERROR}}',
+//   schema: {
+//     code: 200,
+//     success: false,
+//     error: [
+//       {
+//         field: 'popup',
+//         message: '{{BUSINESS_ERROR}}'
+//       }
+//     ],
+//     message: ''
+//   }
+// }
+
+/* ============================
+   ⚠️ VALIDATION ERROR
+============================ */
+// #swagger.responses[409] = {
+//   description: 'Validation Error',
+//   schema: {
+//     code: 409,
+//     success: false,
+//     error: [
+//       {
+//         field: 'popup',
+//         message: 'Invalid input'
+//       }
+//     ],
+//     message: ''
+//   }
+// }
+
+/* ============================
+   💥 SERVER ERROR
+============================ */
+// #swagger.responses[500] = {
+//   description: 'Internal server error',
+//   schema: {
+//     code: 500,
+//     success: false,
+//     error: [
+//       {
+//         field: 'popup',
+//         message: 'Error'
+//       }
+//     ],
+//     message: ''
+//   }
+// }
+
+
+/**
+ * ============================
+ * 🧩 GET API TEMPLATE
+ * ============================
+ */
+// #swagger.tags = ['{{TAG}}']
+// #swagger.summary = 'Get {{RESOURCE}}'
+// #swagger.description = 'Fetch {{RESOURCE}} list'
+
+// #swagger.parameters['page'] = {
+//   in: 'query',
+//   type: 'integer',
+//   example: 1
+// }
+
+// #swagger.responses[200] = {
+//   description: 'Success',
+//   schema: {
+//     code: 200,
+//     success: true,
+//     data: [],
+//     error: [],
+//     message: 'Fetched successfully'
+//   }
+// }
+
+
+/**
+ * ============================
+ * 🧩 POST API TEMPLATE
+ * ============================
+ */
+// #swagger.tags = ['{{TAG}}']
+// #swagger.summary = 'Create {{RESOURCE}}'
+// #swagger.description = 'Creates a new {{RESOURCE}}'
+
+// #swagger.requestBody = {
+//   required: true,
+//   schema: {
+//     name: 'example'
+//   }
+// }
+
+// #swagger.responses[200] = {
+//   description: 'Created successfully',
+//   schema: {
+//     code: 201,
+//     success: true,
+//     data: {},
+//     error: [],
+//     message: 'Created successfully'
+//   }
+// }
+
+
+/**
+ * ============================
+ * 🧩 PATCH/PUT TEMPLATE
+ * ============================
+ */
+// #swagger.tags = ['{{TAG}}']
+// #swagger.summary = 'Update {{RESOURCE}}'
+// #swagger.description = 'Updates existing {{RESOURCE}}'
+
+// #swagger.parameters['id'] = {
+//   in: 'path',
+//   required: true,
+//   type: 'string'
+// }
+
+// #swagger.requestBody = {
+//   required: true,
+//   schema: {
+//     key: 'value'
+//   }
+// }
+
+
+/**
+ * ============================
+ * 🧩 DELETE TEMPLATE
+ * ============================
+ */
+
+// #swagger.tags = ['{{TAG}}']
+// #swagger.summary = 'Delete {{RESOURCE}}'
+// #swagger.description = 'Deletes {{RESOURCE}}'
+
+// #swagger.parameters['id'] = {
+//   in: 'path',
+//   required: true,
+//   type: 'string'
+// }

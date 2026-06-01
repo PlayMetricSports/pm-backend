@@ -1,0 +1,26 @@
+# NPM Packages
+node_modules
+
+# VSCODE Settings
+.vscode
+
+# SQLite Database
+blacklist.db
+
+# AppMap
+tmp
+
+# ENV
+.env
+.env.local
+
+# Backup
+controllers/organization/database/backup/.temp/*
+
+
+# Firebase secret 
+secret/*.json
+
+cronjob/.env
+
+eduglobalschools-00975ad9d087.json
