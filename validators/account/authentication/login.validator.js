@@ -1,4 +1,5 @@
 const isEmpty = require("@/validators/main/validator/isEmpty.validator");
+const isEmail = require("@/validators/main/validator/isEmail.validator");
 const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const LoginValidator = (request, response, next) => {

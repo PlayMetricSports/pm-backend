@@ -38,7 +38,7 @@ async function startV2Server() {
 
     try {
         await connectDB();
-        await startSocket()
+        // await startSocket()
         // Start the server
         const server = v2app.listen(PORT, () => {
             console.warn(`🚀 Worker ${process.pid} is running on port: ${PORT}`);
