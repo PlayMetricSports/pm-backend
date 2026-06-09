@@ -3,7 +3,6 @@ const WebAccess = require("@/permissions/webAccess");
 const ActionMiddleware = async (request, response, next, key) => {
     const WebAccessValues = WebAccess();
     let permission;
-    console.log(request.user)
     if (Array.isArray(key)) {
         key && key.length > 0 && key.map(k => {
             if (!permission) {

@@ -1,0 +1,32 @@
+const mongoose = require("mongoose");
+
+const SportSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "Sport name is required."]
+    },
+    orgId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Org",
+        required: [true, "Organisation ID is required."]
+    },
+    address: {
+        type: String,
+        required: [true, "Sport address/location is required."]
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: false
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: false
+    }
+}, { timestamps: true });
+
+SportSchema.index({ orgId: 1 });
+SportSchema.index({ name: 1 });
+
+module.exports = mongoose.model("Sport", SportSchema);

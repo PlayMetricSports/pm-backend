@@ -1,7 +1,7 @@
 const WebAccess = () => {
   const access = {
     "actions": "ac-101",
-    "user": "ac-102",
+    "users": "ac-102",
     "user-role": "ac-103",
     "main-dashboard": "ac-104",
     "booking-mangement": "ac-105",
