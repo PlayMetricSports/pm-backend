@@ -1,9 +1,10 @@
 const isEmpty = require("@/validators/main/validator/isEmpty.validator");
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const LoginValidator = (request, response, next) => {
     if (isEmpty(request.body?.email)) {
-        return response.status(200).json({
-            code: 200,
+        return response.status(STATUS_CODES.BAD_REQUEST).json({
+            code: STATUS_CODES.BAD_REQUEST,
             success: false,
             error: [
                 {
@@ -15,23 +16,23 @@ const LoginValidator = (request, response, next) => {
         });
     }
 
-    // if (!isEmail(request.body?.email)) {
-    //     return response.status(200).json({
-    //         code: 200,
-    //         success: false,
-    //         error: [
-    //             {
-    //                 field: "email",
-    //                 message: "Please enter a valid email your email address."
-    //             }
-    //         ],
-    //         message: ""
-    //     });
-    // }
+    if (!isEmail(request.body?.email)) {
+        return response.status(STATUS_CODES.BAD_REQUEST).json({
+            code: STATUS_CODES.BAD_REQUEST,
+            success: false,
+            error: [
+                {
+                    field: "email",
+                    message: "Please enter a valid email your email address."
+                }
+            ],
+            message: ""
+        });
+    }
 
     if (isEmpty(request.body?.password)) {
-        return response.status(200).json({
-            code: 200,
+        return response.status(STATUS_CODES.BAD_REQUEST).json({
+            code: STATUS_CODES.BAD_REQUEST,
             success: false,
             error: [
                 {

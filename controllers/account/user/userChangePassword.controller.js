@@ -1,5 +1,6 @@
 const User = require("@/models/account/user.model");
 const { encryptKey } = require("@/security/rsa.key.security");
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const UserChangePasswordController = async (request, response) => {
     try {
@@ -14,16 +15,16 @@ const UserChangePasswordController = async (request, response) => {
         )
 
         if (user?._id) {
-            return response.status(200).json({
-                code: 200,
+            return response.status(STATUS_CODES.OK).json({
+                code: STATUS_CODES.OK,
                 success: true,
                 error: [],
                 message: "Password successfully updated."
             });
         }
         else {
-            return response.status(200).json({
-                code: 200,
+            return response.status(STATUS_CODES.BAD_REQUEST).json({
+                code: STATUS_CODES.BAD_REQUEST,
                 success: false,
                 error: [
                     {
@@ -35,8 +36,8 @@ const UserChangePasswordController = async (request, response) => {
             });
         }
     } catch (error) {
-        return response.status(500).json({
-            code: 500,
+        return response.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            code: STATUS_CODES.INTERNAL_SERVER_ERROR,
             success: false,
             error: [
                 {

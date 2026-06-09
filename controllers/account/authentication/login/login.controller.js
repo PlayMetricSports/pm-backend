@@ -16,6 +16,7 @@ const employeeModel = require("@/models/employee/employee.model");
 const EMPLOYEEUSERTYPES = ["school-employee", "employee", "school-admin", "admin"]
 const mongoose = require("mongoose")
 const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 // const getStudentPendingAssignments = async (studentInfoId) => {
 //     try {
@@ -553,16 +554,16 @@ const LoginController = async (request, response) => {
         if (!user?._id) {
             await LogController(request, "api::login", "failed", "Their is no account associate with this email.");
 
-            return response.status(200).json(
-                createErrorResponse(401, "email", "The email or password that you've entered is incorrect.")
+            return response.status(STATUS_CODES.BAD_REQUEST).json(
+                createErrorResponse(STATUS_CODES.BAD_REQUEST, "email", "The email or password that you've entered is incorrect.")
             );
         }
 
         if (user?.userStatus == "inactive") {
             await LogController(request, "api::login", "failed", "The email or password that you've entered is incorrect.");
 
-            return response.status(200).json(
-                createErrorResponse(401, "popup", "Your account is In-active Please contact your admin.")
+            return response.status(STATUS_CODES.BAD_REQUEST).json(
+                createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", "Your account is In-active Please contact your admin.")
             );
         }
 

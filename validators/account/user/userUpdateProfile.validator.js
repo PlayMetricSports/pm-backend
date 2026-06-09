@@ -1,6 +1,7 @@
 const isCountryCode = require("@/validators/main/validator/isCountryCode.validator");
 const isEmpty = require("@/validators/main/validator/isEmpty.validator");
 const isMobileNumber = require("@/validators/main/validator/isMobileNumber.validator");
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const UserUpdateProfileValidator = async (request, response, next) => {
     const error = [];
@@ -46,8 +47,8 @@ const UserUpdateProfileValidator = async (request, response, next) => {
     }
 
     if (error.length > 0) {
-        return response.status(200).json({
-            code: 200,
+        return response.status(STATUS_CODES.BAD_REQUEST).json({
+            code: STATUS_CODES.BAD_REQUEST,
             success: false,
             error: error,
             message: ""

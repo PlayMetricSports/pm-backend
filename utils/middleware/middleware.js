@@ -10,6 +10,7 @@ const User = require("@/models/account/user.model");
 const Employee = require("@/models/employee/employee.model");
 
 const EMPLOYEEUSERTYPES = new Set(["employee", "admin"]);
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 
 const Middleware = async (request, response, next) => {
@@ -18,8 +19,8 @@ const Middleware = async (request, response, next) => {
     const token = GetToken(request);
     try {
         if (!token) {
-            return response.status(401).json({
-                code: 401,
+            return response.status(STATUS_CODES.UNAUTHORIZED).json({
+                code: STATUS_CODES.UNAUTHORIZED,
                 success: false,
                 error: [
                     {
@@ -43,8 +44,8 @@ const Middleware = async (request, response, next) => {
         ]);
 
         if (userLoggedOut && userLoggedOut != null && userLoggedOut != undefined) {
-            return response.status(200).json({
-                code: 400,
+            return response.status(STATUS_CODES.BAD_REQUEST).json({
+                code: STATUS_CODES.BAD_REQUEST,
                 success: false,
                 expired: true,
                 error: [
@@ -72,8 +73,8 @@ const Middleware = async (request, response, next) => {
             .lean();
 
         if (!user) {
-            return response.status(401).json({
-                code: 401,
+            return response.status(STATUS_CODES.UNAUTHORIZED).json({
+                code: STATUS_CODES.UNAUTHORIZED,
                 success: false,
                 error: [
                     {
@@ -92,8 +93,8 @@ const Middleware = async (request, response, next) => {
 
 
         if (user?.userBlockStatus == "yes") {
-            return response.status(200).json({
-                code: 401,
+            return response.status(STATUS_CODES.UNAUTHORIZED).json({
+                code: STATUS_CODES.UNAUTHORIZED,
                 success: false,
                 blocked: true,
                 error: [
