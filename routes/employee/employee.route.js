@@ -33,28 +33,27 @@ const key = ["users"]
 
 router.get(
     "/",
-    // (request, response, next) => ActionMiddleware(request, response, next, key),
+    (request, response, next) => ActionMiddleware(request, response, next, key),
     EmployeesValidator,
     EmployeesController
 );
 
 router.get(
     "/get-user-type-roles-and-dept",
-    // (request, response, next) => ActionMiddleware(request, response, next, key),
+    (request, response, next) => ActionMiddleware(request, response, next, key),
     GetUserTypeRoles
 );
 
 router.post(
     "/",
-    // (request, response, next) => ActionMiddleware(request, response, next, key),
-    // (request, response, next) => UploadStorage(request, response, next, ["image", "application"], false),
+    (request, response, next) => ActionMiddleware(request, response, next, key),
     CreateEmployeeValidator,
     CreateEmployeeController
 );
 
 router.patch(
     "/edit/:id",
-    // (request, response, next) => ActionMiddleware(request, response, next, key),
+    (request, response, next) => ActionMiddleware(request, response, next, key),
     EditEmployeeValidator,
     EditEmployeeController
 );

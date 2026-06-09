@@ -1,11 +1,14 @@
 require("module-alias/register");
 require("dotenv").config();
+const express = require("express");
 
 const { connectDB, disconnectDB } = require("@/utils/connections/database/connectDB");
 const cluster = require("cluster");
 
 //////////server Socket Setup ////////
 const http = require("http");
+// const redisAdapter = require("socket.io-redis");
+
 const { initializeSocket } = require("./utils/connections/database/socket");
 
 //////////////////////////////////////
@@ -16,6 +19,18 @@ const PORT = process.env.BACKEND_PORT || 5000;
 // Limit workers
 const numCPUs = process.env.NUMBER_OF_CPUS || 1;
 
+async function startSocket() {
+
+    const socketApp = express();
+    const socketServer = http.createServer(socketApp);
+    initializeSocket(socketServer)
+
+    // Start the Socket Server
+    const SOCKET_PORT = process.env.SOCKET_PORT || 5052;
+    socketServer.listen(SOCKET_PORT, () => {
+        console.warn(`Socket.IO server running on port ${SOCKET_PORT} : Worker ${process.pid}`);
+    });
+}
 
 // Connect to Database and Start Server
 async function startV2Server() {
@@ -23,7 +38,7 @@ async function startV2Server() {
 
     try {
         await connectDB();
-
+        await startSocket()
         // Start the server
         const server = v2app.listen(PORT, () => {
             console.warn(`🚀 Worker ${process.pid} is running on port: ${PORT}`);

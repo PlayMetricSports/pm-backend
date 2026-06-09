@@ -1,7 +1,8 @@
 // utils/socket/socket.js
 const { Server } = require('socket.io');
-const redisAdapter = require('socket.io-redis');
-
+// const redisAdapter = require('socket.io-redis');
+const { createAdapter } = require("@socket.io/redis-adapter");
+const { createClient } = require("redis");
 let io = null;
 const connectedClients = {
     students: {}, // { studentId: socket }
@@ -22,15 +23,22 @@ function getReadableSocketInfo(socket) {
         data: socket.data,
     };
 }
-function initializeSocket(server) {
+async function initializeSocket(server) {
+
     io = new Server(server, {
         cors: {
             origin: '*',
             methods: ['GET', 'POST'],
         }
     });
+    const pubClient = createClient({ url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`, });
 
-    io.adapter(redisAdapter({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT }));
+    const subClient = pubClient.duplicate();
+
+    await pubClient.connect();
+    await subClient.connect();
+
+    io.adapter(createAdapter(pubClient, subClient));
 
     io.on('connection', (socket) => {
         socket.on('ping', () => {

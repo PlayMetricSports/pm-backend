@@ -395,7 +395,6 @@ async function updateLastLoginTime(userId) {
 
 const LoginController = async (request, response) => {
     try {
-        console.log(request.body)
         const { email, password } = request.body;
         const encryptedPassword = encryptPassword(password.trim());
         // let otp = ''
