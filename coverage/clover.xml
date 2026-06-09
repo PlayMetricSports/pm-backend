@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1780985170254" clover="3.2.0">
-  <project timestamp="1780985170254" name="All files">
-    <metrics statements="1996" coveredstatements="720" conditionals="715" coveredconditionals="49" methods="221" coveredmethods="14" elements="2932" coveredelements="783" complexity="0" loc="1996" ncloc="1996" packages="44" files="122" classes="122"/>
+<coverage generated="1780985707784" clover="3.2.0">
+  <project timestamp="1780985707784" name="All files">
+    <metrics statements="1997" coveredstatements="720" conditionals="715" coveredconditionals="49" methods="221" coveredmethods="14" elements="2933" coveredelements="783" complexity="0" loc="1997" ncloc="1997" packages="44" files="122" classes="122"/>
     <package name="pm-backend">
       <metrics statements="23" coveredstatements="21" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="0"/>
       <file name="app.js" path="/Users/aritranaharay/CodeBasket/PlayMetrics/pm-backend/app.js">
@@ -1904,7 +1904,7 @@
       </file>
     </package>
     <package name="pm-backend.validators.account.user">
-      <metrics statements="67" coveredstatements="19" conditionals="40" coveredconditionals="0" methods="4" coveredmethods="0"/>
+      <metrics statements="68" coveredstatements="19" conditionals="40" coveredconditionals="0" methods="4" coveredmethods="0"/>
       <file name="userChangePassword.validator.js" path="/Users/aritranaharay/CodeBasket/PlayMetrics/pm-backend/validators/account/user/userChangePassword.validator.js">
         <metrics statements="16" coveredstatements="4" conditionals="10" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
@@ -1940,13 +1940,14 @@
         <line num="33" count="3" type="stmt"/>
       </file>
       <file name="userUpdateProfile.validator.js" path="/Users/aritranaharay/CodeBasket/PlayMetrics/pm-backend/validators/account/user/userUpdateProfile.validator.js">
-        <metrics statements="22" coveredstatements="6" conditionals="14" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <metrics statements="23" coveredstatements="6" conditionals="14" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
         <line num="6" count="3" type="stmt"/>
         <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
         <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="10" count="0" type="stmt"/>
         <line num="16" count="0" type="cond" truecount="0" falsecount="2"/>

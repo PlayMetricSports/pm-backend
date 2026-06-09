@@ -31,7 +31,7 @@ async function initializeSocket(server) {
             methods: ['GET', 'POST'],
         }
     });
-    const pubClient = createClient({ url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`, });
+    const pubClient = createClient({ url: `${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`, });
 
     const subClient = pubClient.duplicate();
 

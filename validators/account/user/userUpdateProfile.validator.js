@@ -5,7 +5,7 @@ const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const UserUpdateProfileValidator = async (request, response, next) => {
     const error = [];
-
+    console.log("coming here")
     if (isEmpty(request.body?.firstName)) {
         error.push({
             field: "firstName",

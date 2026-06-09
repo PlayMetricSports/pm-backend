@@ -40,7 +40,7 @@ describe("Profile Endpoints", () => {
     test("Should return 400 for invalid request body", async () => {
       const response = await request(app)
         .patch("/api/v1/account/user/update-profile")
-        .set("Authorization", "Bearer invalid-token")
+        .set("Authorization", "Bearer valid-token")
         .send({})
         .set("Content-Type", "application/json");
 
