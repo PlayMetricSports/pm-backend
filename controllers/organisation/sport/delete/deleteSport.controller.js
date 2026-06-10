@@ -4,7 +4,7 @@ const DeleteSportController = async (request, response) => {
     try {
         const { sportId } = request.params;
 
-        const sport = await Sport.findByIdAndUpdate(sportId, { status: "inactive" });
+        const sport = await Sport.findByIdAndUpdate(sportId, { status: "inactive" }, { new: true });
 
         if (!sport) {
             return response.status(200).json({

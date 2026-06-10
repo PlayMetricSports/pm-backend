@@ -4,7 +4,7 @@ const DeleteVenueController = async (request, response) => {
     try {
         const { venueId } = request.params;
 
-        const venue = await Venue.findByIdAndUpdate(venueId, { status: "inactive" });
+        const venue = await Venue.findByIdAndUpdate(venueId, { status: "inactive" }, { new: true });
 
         if (!venue) {
             return response.status(200).json({
