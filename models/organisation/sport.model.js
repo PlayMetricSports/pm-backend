@@ -10,9 +10,10 @@ const SportSchema = mongoose.Schema({
         ref: "Org",
         required: [true, "Organisation ID is required."]
     },
-    address: {
-        type: String,
-        required: [true, "Sport address/location is required."]
+    venueId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Venue",
+        required: [true, "Venue ID is required."]
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

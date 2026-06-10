@@ -6,6 +6,7 @@ const GetSportByIdController = async (request, response) => {
 
         const sport = await Sport.findById(sportId)
             .populate("orgId", "name")
+            .populate("venueId", "name")
             .populate("createdBy", "id firstName lastName email")
             .populate("updatedBy", "id firstName lastName email");
 

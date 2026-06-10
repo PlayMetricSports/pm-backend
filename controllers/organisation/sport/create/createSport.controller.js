@@ -2,13 +2,13 @@ const Sport = require("@/models/organisation/sport.model");
 
 const CreateSportController = async (request, response) => {
     try {
-        const { name, orgId, address } = request.body;
+        const { name, orgId, venueId } = request.body;
         const userId = request.user.id;
 
         const newSport = await Sport.create({
             name,
             orgId,
-            address,
+            venueId,
             createdBy: userId,
             updatedBy: userId
         });

@@ -14,7 +14,7 @@ const UpdateCalendarValidator = (request, response, next) => {
             return response.status(200).json({
                 code: 400,
                 success: false,
-                error: errors,
+                error: errors[0].message,
                 message: ""
             });
         }
