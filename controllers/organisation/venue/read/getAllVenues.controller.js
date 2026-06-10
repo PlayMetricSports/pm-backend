@@ -4,9 +4,12 @@ const GetAllVenuesController = async (request, response) => {
     try {
         const { orgId, page = 1, limit = 10, search = "" } = request.query;
 
-        const query = { orgId, status: "active" };
+        const query = { status: "active" };
         if (search) {
             query.name = { $regex: search, $options: "i" };
+        }
+        if (orgId) {
+            query.orgId = orgId;
         }
 
         const skip = (page - 1) * limit;

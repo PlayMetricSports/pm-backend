@@ -4,7 +4,7 @@ const DeleteOrgController = async (request, response) => {
     try {
         const { orgId } = request.params;
 
-        const org = await Org.findByIdAndUpdate(orgId, { status: "inactive" });
+        const org = await Org.findByIdAndUpdate(orgId, { status: "inactive" }, { new: true });
 
         if (!org) {
             return response.status(200).json({
