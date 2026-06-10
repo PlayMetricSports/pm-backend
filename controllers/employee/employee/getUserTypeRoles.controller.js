@@ -21,13 +21,13 @@ const GetUserTypeRoles = async (request, response) => {
         }, {});
         const userDeptList = await UserDepartment.find({ departmentStatus: "active" }).select("-_id departmentKey").lean()
         let organisations
-        if (user.userType == "admin") {
+        if (request.user.userType == "admin") {
             organisations = await Org.find({}).select("name").lean()
         }
         else {
             organisations = [{
-                _id: user.orgId?._id,
-                name: user.orgId?.name
+                _id: request.user.orgId?._id,
+                name: request.user.orgId?.name
             }]
         }
         const data = encryptKeys({ userTypeList: list, userDeptList, organisations });
