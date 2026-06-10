@@ -20,11 +20,11 @@ const GetUserTypeRoles = async (request, response) => {
             return acc;
         }, {});
         const userDeptList = await UserDepartment.find({ departmentStatus: "active" }).select("-_id departmentKey").lean()
-        let organisations
+        let organisations = []
         if (request.user.userType == "admin") {
             organisations = await Org.find({}).select("name").lean()
         }
-        else {
+        else if (request.user.orgId) {
             organisations = [{
                 _id: request.user.orgId?._id,
                 name: request.user.orgId?.name

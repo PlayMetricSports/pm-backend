@@ -12,7 +12,7 @@ const CreateCalendarController = async (request, response) => {
             timeslotId,
             date,
             status: status || "scheduled",
-            bookingId,
+            // bookingId,
             createdBy: userId,
             updatedBy: userId
         });
