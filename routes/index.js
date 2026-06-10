@@ -1,6 +1,7 @@
 const express = require('express');
 const accountRoutes = require('./account');
 const staffRoutes = require('./employee');
+const organisationRoutes = require('./organisation');
 
 
 // JSON Body / Param Sanitization
@@ -26,5 +27,6 @@ router.use("/account", accountRoutes);
 router.use(Middleware)
 
 router.use("/staff", staffRoutes);
+router.use("/organisation", organisationRoutes);
 
 module.exports = router;

@@ -23,6 +23,11 @@ const SportSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: false
+    },
+    status: {
+        type: String,
+        enum: ["active", "inactive"],
+        default: "active"
     }
 }, { timestamps: true });
 
