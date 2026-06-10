@@ -2,7 +2,7 @@ const User = require("@/models/account/user.model");
 const Employee = require("@/models/employee/employee.model");
 
 const EditEmployeeController = async (request, response) => {
-    const { firstName, middleName, lastName, countryCode, mobileNumber, employeeCode, organization, designation } = request.body;
+    const { firstName, middleName, lastName, countryCode, mobileNumber, employeeCode, organization, designation, orgId } = request.body;
     const { id } = request.params;
 
     try {
@@ -20,6 +20,7 @@ const EditEmployeeController = async (request, response) => {
         await Employee.findOneAndUpdate(
             { userId: id },
             {
+                orgId,
                 employeeCode: employeeCode,
                 organization: organization,
                 designation: designation,

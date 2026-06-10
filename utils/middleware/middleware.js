@@ -65,11 +65,9 @@ const Middleware = async (request, response, next) => {
         }
         const user = await User
             .findById(_id)
-            .select("email loginEmail.address isSuperAdmin timezone name userStatus userType userBlockStatus tenantCode")
-            .populate({
-                path: "actionIds",
-                select: "actionKey"
-            })
+            .select("email loginEmail.address isSuperAdmin timezone name userStatus userType userBlockStatus tenantCode orgId")
+            .populate("actionIds", "actionKey")
+            .populate("orgId", "name")
             .lean();
 
         if (!user) {

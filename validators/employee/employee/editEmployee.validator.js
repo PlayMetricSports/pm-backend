@@ -2,10 +2,14 @@ const isCountryCode = require("@/validators/main/validator/isCountryCode.validat
 const isEmpty = require("@/validators/main/validator/isEmpty.validator");
 const isMobileNumber = require("@/validators/main/validator/isMobileNumber.validator");
 
+const capitalizeFirst = (str) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
 const EditEmployeeValidator = async (request, response, next) => {
     const error = [];
-    let organizations = [ "Edovu Ventures", "K12 Online Schools", "EduXLL", "American EduGlobal School"];
-
+    let organizations = await Org.distinct("name");
+    const organizationsArray = organizations.map(ut => capitalizeFirst(ut))
     if (isEmpty(request.body?.firstName)) {
         error.push({
             field: "firstName",
@@ -46,7 +50,7 @@ const EditEmployeeValidator = async (request, response, next) => {
         })
     }
 
-    if(request.body?.organization && !organizations.includes(request.body?.organization)){
+    if (request.body?.organization && !organizationsArray.includes(request.body?.organization)) {
         error.push({
             field: "organization",
             message: "Please select a valid organization."

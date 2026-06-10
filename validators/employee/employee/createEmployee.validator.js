@@ -55,6 +55,12 @@ const CreateEmployeeValidator = (request, response, next) => {
             message: "Please enter your mobile number."
         })
     }
+    if (isEmpty(request.body?.orgId)) {
+        error.push({
+            field: "orgId",
+            message: "Please enter the organisation."
+        })
+    }
     if (!isNumber(request.body?.mobileNumber)) {
         error.push({
             field: "mobileNumber",

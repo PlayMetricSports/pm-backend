@@ -8,7 +8,7 @@ const rollback = new RollbackManager();
 const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
 
 const CreateEmployeeController = async (request, response) => {
-    const { firstName, middleName, lastName, email, countryCode, mobileNumber, department, userRole, organization, employeeCode, designation } = request.body
+    const { firstName, middleName, lastName, email, countryCode, mobileNumber, department, userRole, organization, employeeCode, designation, orgId } = request.body
     const password = encryptPassword(process.env.USER_PASSWORD);
     let user, employee;
 
@@ -35,6 +35,7 @@ const CreateEmployeeController = async (request, response) => {
                 middleName: middleName,
                 lastName: lastName
             },
+            orgId,
             email: { address: email },
             loginEmail: { address: email },
             password: password,

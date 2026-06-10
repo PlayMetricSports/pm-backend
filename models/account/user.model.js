@@ -38,9 +38,9 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: false,
     },
-    organizationId: {
+    orgId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Organization",
+        ref: "Org",
     },
     email: {
         address: {

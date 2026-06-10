@@ -1,5 +1,6 @@
 const UserRole = require("@/models/account/userRole.model");
 const UserDepartment = require("@/models/account/user-department.model");
+const Org = require("@/models/organisation/org.model");
 
 const { encryptKeys } = require("@/security/rsa.keys.security");
 
@@ -19,8 +20,17 @@ const GetUserTypeRoles = async (request, response) => {
             return acc;
         }, {});
         const userDeptList = await UserDepartment.find({ departmentStatus: "active" }).select("-_id departmentKey").lean()
-        const data = encryptKeys({ userTypeList: list, userDeptList });
-
+        let organisations
+        if (user.userType == "admin") {
+            organisations = await Org.find({}).select("name").lean()
+        }
+        else {
+            organisations = [{
+                _id: user.orgId?._id,
+                name: user.orgId?.name
+            }]
+        }
+        const data = encryptKeys({ userTypeList: list, userDeptList, organisations });
         return response.status(200).json({
             code: 200,
             success: true,
