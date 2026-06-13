@@ -40,7 +40,7 @@ const { google } = require("googleapis");
 const mongoose = require("mongoose");
 
 const SPORTS_REGEX =
-    /\b(football|pickleball|badminton|cricket|tennis|table tennis|basketball|volleyball|squash|padel|futsal|swimming)\b/i;
+    /\b(football|pickleball|badminton|cricket|tennis|table tennis|basketball|volleyball|squash|padle|futsal|swimming)\b/i;
 
 function decodeBase64(data) {
     return Buffer.from(
