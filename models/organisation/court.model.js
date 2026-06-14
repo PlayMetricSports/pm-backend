@@ -56,9 +56,13 @@ const CourtSchema = mongoose.Schema({
 }, { timestamps: true });
 
 CourtSchema.index({ orgId: 1, venueId: 1, sportId: 1 });
-CourtSchema.index({ orgId: 1, venueId: 1, courtNumber: 1, courtName: 1, status: 1 });
+CourtSchema.index({ orgId: 1, venueId: 1, courtNumber: 1, courtName: 1, status: 1 }, {
+    unique: true,
+    partialFilterExpression: {
+        status: "active"
+    }
+});
 CourtSchema.index({ date: 1 });
 CourtSchema.index({ status: 1 });
-CourtSchema.index({ timeslotId: 1 });
 
 module.exports = mongoose.model("Court", CourtSchema);
