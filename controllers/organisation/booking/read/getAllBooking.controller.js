@@ -1,4 +1,4 @@
-const Calendar = require("@/models/organisation/calendar.model");
+const Booking = require("@/models/organisation/booking.model");
 
 const GetAllCalendarsController = async (request, response) => {
     try {
@@ -12,7 +12,7 @@ const GetAllCalendarsController = async (request, response) => {
 
         const skip = (page - 1) * limit;
 
-        const calendars = await Calendar.find(query)
+        const calendars = await Booking.find(query)
             .populate("orgId", "name")
             .populate("venueId", "name")
             .populate("sportId", "name")

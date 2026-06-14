@@ -6,6 +6,8 @@ const UserDepartment = require("@/models/account/user-department.model");
 const RollbackManager = require('@/services/rollBack.service')
 const rollback = new RollbackManager();
 const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
+const handleCatchError = require("@/utils/middleware/errorHandler.middleware")
 
 const CreateEmployeeController = async (request, response) => {
     const { firstName, middleName, lastName, email, countryCode, mobileNumber, department, userRole, organization, employeeCode, designation, orgId } = request.body
@@ -24,8 +26,8 @@ const CreateEmployeeController = async (request, response) => {
         const getUserDepartment = await UserDepartment.findOne({ departmentKey: department, departmentStatus: "active" }).select("_id");
 
         if (!getUserDepartment) {
-            return response.status(200).json(
-                createErrorResponse(409, "popup", "Please input valid user-department."));
+            return response.status(STATUS_CODES.CONFLICT).json(
+                createErrorResponse(STATUS_CODES.CONFLICT, "popup", "Please input valid user-department."));
         }
 
 
@@ -75,12 +77,12 @@ const CreateEmployeeController = async (request, response) => {
                     employeeCode: employee?.employeeCode
                 };
                 rollback.clear();
-                return response.status(200).json(
-                    createSuccessResponse(200, data, "Employee successfully created."));
+                return response.status(STATUS_CODES.CREATED).json(
+                    createSuccessResponse(STATUS_CODES.CREATED, data, "Employee successfully created."));
             } else {
                 await rollback.rollback();
-                return response.status(200).json(
-                    createErrorResponse(400, "popup", "Employee creation failed."));
+                return response.status(STATUS_CODES.CONFLICT).json(
+                    createErrorResponse(STATUS_CODES.CONFLICT, "popup", "Employee creation failed."));
             }
         }
 
@@ -89,8 +91,8 @@ const CreateEmployeeController = async (request, response) => {
             createErrorResponse(400, "popup", "Employee not created by the server."));
     } catch (error) {
         await rollback.rollback();
-        return response.status(500).json(
-            createErrorResponse(500, "popup", `Error: ${error}`));
+        return handleCatchError(error, response)
+
     }
 };
 

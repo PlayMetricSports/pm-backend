@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const courtNameEnums = []
 const TPATypeEnum = ["PlayO", "District", "Own"]
+const StatusEnum = ["scheduled", "District", "Own"]
 function capitalizeWords(str) {
     if (!str) return str;
     return str
@@ -67,6 +67,11 @@ const BookingSchema = mongoose.Schema({
         enum: TPATypeEnum,
         required: [true, "TPA Type is required."]
     },
+    status: {
+        type: String,
+        enum: StatusEnum,
+        required: [true, "Status is required."]
+    },
     finDetails: {
         ticketAmount: { type: Number, required: [true, "Ticket Amount is required."] },
         convenienceFees: { type: Number, required: [true, "Convenience Fees is required."] },
@@ -100,15 +105,16 @@ const BookingSchema = mongoose.Schema({
         default: () => new Date(),
         required: [true, "Date is required."]
     },
-    courtNumber: {
-        type: Number,
+    bookingDate: {
+        type: Date,
+        default: () => new Date(),
+        required: [true, "Date is required."]
     },
-    courtName: {
-        type: String,
-        enum: courtNameEnums
+    courtId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Court",
+        required: [true, "Court is required."]
     },
-
-
 
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

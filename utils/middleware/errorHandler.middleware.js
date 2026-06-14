@@ -1,4 +1,5 @@
 const { createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter')
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const errorHandler = (err, res, req, next) => {
     // console.log({ err, res, req, next })
@@ -16,7 +17,7 @@ const errorHandler = (err, res, req, next) => {
     // -----------------------------
     if (err.name === "ValidationError") {
         const errors = Object.values(err.errors).map(e => e.message);
-        return res.status(400).json(createErrorResponse(400, "popup", `VALIDATION_ERROR - ${errors}`))
+        return res.status(STATUS_CODES.BAD_REQUEST).json(createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", `VALIDATION_ERROR - ${errors}`))
 
     }
 
@@ -26,7 +27,7 @@ const errorHandler = (err, res, req, next) => {
     if (err.code === 11000) {
         const field = Object.keys(err.keyValue)[0];
         const value = err.keyValue[field];
-        return res.status(400).json(createErrorResponse(409, "popup", `DUPLICATE_ENTRY - ${field} '${value}' already exists`))
+        return res.status(STATUS_CODES.CONFLICT).json(createErrorResponse(STATUS_CODES.CONFLICT, "popup", `DUPLICATE_ENTRY - ${field} '${value}' already exists`))
 
 
     }
@@ -35,14 +36,14 @@ const errorHandler = (err, res, req, next) => {
     // ✅ Cast Error (Invalid ObjectId)
     // -----------------------------
     if (err.name === "CastError") {
-        return res.status(400).json(createErrorResponse(400, "popup", `INVALID_ID - Invalid ${err.path}: ${err.value}`))
+        return res.status(STATUS_CODES.BAD_REQUEST).json(createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", `INVALID_ID - Invalid ${err.path}: ${err.value}`))
     }
     // -----------------------------
     // ✅ Document Not Found
     // -----------------------------
     if (err.name === "DocumentNotFoundError") {
-        return res.status(400).json(createErrorResponse(
-            404,
+        return res.status(STATUS_CODES.BAD_REQUEST).json(createErrorResponse(
+            STATUS_CODES.BAD_REQUEST,
             "popup",
             "NOT_FOUND - Requested document not found"
         ));
@@ -52,8 +53,8 @@ const errorHandler = (err, res, req, next) => {
     // ✅ MongoDB Network Error
     // -----------------------------
     if (err.name === "MongoNetworkError") {
-        return res.status(400).json(createErrorResponse(
-            503,
+        return res.status(STATUS_CODES.SERVICE_UNAVAILABLE).json(createErrorResponse(
+            STATUS_CODES.SERVICE_UNAVAILABLE,
             "popup",
             "DB_NETWORK_ERROR - Database connection issue"
         ));
@@ -63,8 +64,8 @@ const errorHandler = (err, res, req, next) => {
     // ✅ MongoDB Timeout Error
     // -----------------------------
     if (err.name === "MongoServerSelectionError") {
-        return res.status(400).json(createErrorResponse(
-            503,
+        return res.status(STATUS_CODES.SERVICE_UNAVAILABLE).json(createErrorResponse(
+            STATUS_CODES.SERVICE_UNAVAILABLE,
             "popup",
             "DB_TIMEOUT - Database server not reachable"
         ));
@@ -74,8 +75,8 @@ const errorHandler = (err, res, req, next) => {
     // ✅ BSON / Object parsing error
     // -----------------------------
     if (err.name === "BSONTypeError") {
-        return res.status(400).json(createErrorResponse(
-            400,
+        return res.status(STATUS_CODES.BAD_REQUEST).json(createErrorResponse(
+            STATUS_CODES.BAD_REQUEST,
             "popup",
             `INVALID_OBJECT_FORMAT - ${err.message}`
         ));
@@ -85,16 +86,16 @@ const errorHandler = (err, res, req, next) => {
     // ✅ JWT Errors
     // -----------------------------
     if (err.name === "JsonWebTokenError") {
-        return res.status(400).json(createErrorResponse(
-            401,
+        return res.status(STATUS_CODES.UNAUTHORIZED).json(createErrorResponse(
+            STATUS_CODES.UNAUTHORIZED,
             "popup",
             "INVALID_TOKEN - Invalid authentication token"
         ));
     }
 
     if (err.name === "TokenExpiredError") {
-        return res.status(400).json(createErrorResponse(
-            401,
+        return res.status(STATUS_CODES.UNAUTHORIZED).json(createErrorResponse(
+            STATUS_CODES.UNAUTHORIZED,
             "popup",
             "TOKEN_EXPIRED - Authentication token expired"
         ));

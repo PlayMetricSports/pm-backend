@@ -17,6 +17,7 @@ const EMPLOYEEUSERTYPES = ["school-employee", "employee", "school-admin", "admin
 const mongoose = require("mongoose")
 const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
 const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
+const handleCatchError = require("@/utils/middleware/errorHandler.middleware")
 
 // const getStudentPendingAssignments = async (studentInfoId) => {
 //     try {
@@ -658,10 +659,8 @@ const LoginController = async (request, response) => {
 
     } catch (error) {
         await LogController(request, "api::login", "failed", error);
+        return handleCatchError(error, response)
 
-        return response.status(500).json(
-            createErrorResponse(500, "popup", `Error: ${error}`)
-        );
     }
 }
 

@@ -5,6 +5,7 @@ function checkIfMultipleSportsIds(sportId) {
 }
 const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
 const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
+const handleCatchError = require("@/utils/middleware/errorHandler.middleware")
 
 const CreateCourtController = async (request, response) => {
     try {
@@ -42,8 +43,7 @@ const CreateCourtController = async (request, response) => {
         return response.status(STATUS_CODES.CREATED).json(
             createSuccessResponse(STATUS_CODES.CREATED, newCourt, "Court created successfully."));
     } catch (error) {
-        return response.status(STATUS_CODES.BAD_GATEWAY).json(
-            createErrorResponse(STATUS_CODES.BAD_GATEWAY, "popup", `Error: ${error.message}`));
+        return handleCatchError(error, response)
     }
 };
 

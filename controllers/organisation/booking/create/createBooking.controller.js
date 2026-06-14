@@ -1,6 +1,8 @@
 const Booking = require("@/models/organisation/booking.model");
 const { ValidateQueryFiltersAndInsert, ValidateNonEmptyElements } = require("@/validators/main/validator/multivalidator.js")
-
+const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
+const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
+const handleCatchError = require("@/utils/middleware/errorHandler.middleware")
 const CreateCalendarController = async (request, response) => {
     try {
 
@@ -100,6 +102,8 @@ const CreateCalendarController = async (request, response) => {
         //         type: String,
         //         enum: courtNameEnums
         //     },
+
+
         function constructNameObject(firstName, middleName, lastName) {
             return ValidateQueryFiltersAndInsert({ firstName, middleName, lastName })
         }
@@ -156,47 +160,43 @@ const CreateCalendarController = async (request, response) => {
             }
         }
 
+        async function getTimeSlots(orgId, startTime, endTime) {
+            const Timeslot = require("@/models/organisation/timeslot.model");
+            const findTimeSlots = await Timeslot.find({
+                orgId, timeSlotStatus: "active",
 
-        let {
-            firstName,
-            middleName,
-            lastName,
-            countryCode,
-            number,
-            customerEmail,
-            bookingDateTime,
-            bookingCode,
-            TPA = "Own",
-            ticketAmount,
-            convenienceFees,
-            discount,
-            gstPercentage,
-            gstAmount,
-            totalAmount,
-            courtName,
-            courtNumber,
-            orgId,
-            venueId,
-            sportId,
-            startTime, endTime,
-            date, status,
+                $or: [
+                    { startTime },
+                    { endTime }
+                ]
+
+            }).select("_id").lean()
+            return findTimeSlots.map(ts => ts?._id)
+
+        }
+
+
+        let { firstName, middleName, lastName, countryCode, number, customerEmail, bookingDateTime, bookingCode, TPA = "Own", ticketAmount, convenienceFees, discount, gstPercentage, gstAmount, totalAmount, courtId, orgId, venueId, sportId, startTime, endTime, bookingDate = new Date(), status = "scheduled",
         } = request.body;
+
+
         const userId = request.user.id;
+
         const customerName = constructNameObject(firstName, middleName, lastName)
         const customerPhone = constructMobileNumberObject(countryCode, number)
 
         const bookingCodeError = ValidateNonEmptyElements({ bookingCode })
         if (bookingCodeError.length > 0) {
-            bookingCode = generateUniqueBookingCode()
+            bookingCode = await generateUniqueBookingCode()
         }
 
-        const finDetails = constructFinancialDetails(
-            ticketAmount,
-            convenienceFees,
-            discount,
-            gstPercentage,
-            gstAmount,
-            totalAmount)
+        const finDetails = constructFinancialDetails(ticketAmount, convenienceFees, discount, gstPercentage, gstAmount, totalAmount)
+
+        const timeslotId = await getTimeSlots(orgId, startTime, endTime)
+        if (timeslotId?.length == 0) {
+            return response.status(STATUS_CODES.BAD_REQUEST).json(
+                createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", "No TimeSlots found within the start and end Timings"));
+        }
 
         const newBooking = await Booking.create({
             customerName,
@@ -209,20 +209,16 @@ const CreateCalendarController = async (request, response) => {
             orgId,
             venueId,
             sportId,
+            courtId,
             timeslotId,
-            date,
-            status: status || "scheduled",
+            bookingDate,
+            status,
             createdBy: userId,
             updatedBy: userId
         });
 
-        return response.status(201).json({
-            code: 201,
-            success: true,
-            data: newCalendar,
-            error: [],
-            message: "Calendar entry created successfully."
-        });
+        return response.status(STATUS_CODES.CREATED).json(
+            createSuccessResponse(STATUS_CODES.CREATED, newBooking, "Booking entry created successfully."));
     } catch (error) {
         return response.status(500).json({
             code: 500,

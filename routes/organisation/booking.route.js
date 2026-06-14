@@ -7,6 +7,7 @@ const CreateBookingController = require("@/controllers/organisation/booking/crea
 const CreateBookingValidator = require("@/validators/organisation/createBooking.validator");
 
 const GetAllBookingsController = require("@/controllers/organisation/booking/read/getAllBooking.controller");
+const GetAllFilterDetailsController = require("@/controllers/organisation/booking/read/getAllFilterDetails.controller");
 
 const GetBookingByIdController = require("@/controllers/organisation/booking/read/getBookingById.controller");
 
@@ -28,6 +29,11 @@ router.get(
     "/",
     SanitizeRequest,
     GetAllBookingsController
+);
+router.get(
+    "/filter-details",
+    SanitizeRequest,
+    GetAllFilterDetailsController
 );
 
 // GET SINGLE 
