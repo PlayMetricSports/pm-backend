@@ -1,15 +1,32 @@
 const Court = require("@/models/organisation/court.model");
+const Sport = require("@/models/organisation/sport.model");
+function checkIfMultipleSportsIds(sportId) {
+    return Array.isArray(sportId) && sportId.length > 1
+}
 const { createSuccessResponse, createErrorResponse } = require('@/utils/helpers/errorFormat/errorFormatter');
 const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
+
 const CreateCourtController = async (request, response) => {
     try {
-        const { orgId, venueId, sportId, courtNumber, courtName, isMultipurpose } = request.body;
+        const { orgId, venueId, sportId, courtNumber, courtName, isMultipurpose = false } = request.body;
         const userId = request.user.id;
         const existingCourt = await Court.findOne({ orgId, venueId, sportId: { $in: [sportId] }, courtNumber, courtName, status: "active" })
         if (existingCourt) {
             return response.status(STATUS_CODES.BAD_REQUEST).json(
                 createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", "Court with Name and Number already Exists for that sport.")
             );
+        }
+        const existingSport = await Sport.findOne({ orgId, venueId, _id: sportId, status: "active" })
+        if (!existingSport?._id) {
+            return response.status(STATUS_CODES.BAD_REQUEST).json(
+                createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", "Selected Combination (org,venue,sport) does not exist.")
+            );
+        }
+        if (isMultipurpose) {
+            if (!checkIfMultipleSportsIds(sportId))
+                return response.status(STATUS_CODES.BAD_REQUEST).json(
+                    createErrorResponse(STATUS_CODES.BAD_REQUEST, "popup", "Select more than one Sport if Court is Multi Purpose.")
+                );
         }
         const newCourt = await Court.create({
             orgId,
@@ -22,25 +39,11 @@ const CreateCourtController = async (request, response) => {
             updatedBy: userId
         });
 
-        return response.status(201).json({
-            code: 201,
-            success: true,
-            data: newCourt,
-            error: [],
-            message: "Court created successfully."
-        });
+        return response.status(STATUS_CODES.CREATED).json(
+            createSuccessResponse(STATUS_CODES.CREATED, newCourt, "Court created successfully."));
     } catch (error) {
-        return response.status(500).json({
-            code: 500,
-            success: false,
-            error: [
-                {
-                    field: "popup",
-                    message: `Error: ${error.message}`
-                }
-            ],
-            message: ""
-        });
+        return response.status(STATUS_CODES.BAD_GATEWAY).json(
+            createErrorResponse(STATUS_CODES.BAD_GATEWAY, "popup", `Error: ${error.message}`));
     }
 };
 
