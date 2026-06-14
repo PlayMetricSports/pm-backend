@@ -7,7 +7,7 @@ const CreateCourtValidator = (request, response, next) => {
         orgId,
         venueId,
         sportId,
-        isMultipurpose
+        // isMultipurpose
     });
 
     if (errors.length > 0) {
