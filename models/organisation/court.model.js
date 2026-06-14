@@ -1,3 +1,4 @@
+const mongoose = require("mongoose")
 
 function capitalizeWords(str) {
     if (!str) return str;
