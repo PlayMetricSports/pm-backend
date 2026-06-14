@@ -1,14 +1,14 @@
 const { ValidateNonEmptyElements, ValidateMongooseObjectIds, ValidateDateFields } = require("@/validators/main/multivalidator");
 
 const CreateCalendarValidator = (request, response, next) => {
-    const { orgId, venueId, sportId, timeslotId, date } = request.body;
+    const { orgId, venueId, sportId, timeslotId, bookingDate } = request.body;
 
     let errors = ValidateNonEmptyElements({
         orgId,
         venueId,
         sportId,
         timeslotId,
-        date
+        bookingDate
     });
 
     if (errors.length > 0) {
