@@ -2,7 +2,7 @@ const Court = require("@/models/organisation/court.model");
 
 const GetAllCourtsController = async (request, response) => {
     try {
-        const { orgId, venueId, page = 1, limit = 10, search = "" } = request.query;
+        const { orgId, venueId, sportId, page = 1, limit = 10, search = "" } = request.query;
 
         const query = { status: "active" };
         if (search) {
@@ -14,6 +14,10 @@ const GetAllCourtsController = async (request, response) => {
         if (venueId) {
             query.venueId = venueId;
         }
+        if (sportId) {
+            query.sportId = { $in: sportId };
+        }
+
 
         const skip = (page - 1) * limit;
 

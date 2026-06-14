@@ -7,12 +7,20 @@ const CreateCourtValidator = require("@/validators/organisation/createCourt.vali
 const CreateCourtController = require("@/controllers/organisation/court/create/createCourt.controller");
 
 const GetAllCourtsController = require("@/controllers/organisation/court/read/getAllCourts.controller");
+const GetAllCourtCreationDetailsController = require("@/controllers/organisation/court/read/getAllCourtCreationDetails.controller");
 const GetCourtByIdController = require("@/controllers/organisation/court/read/getCourtById.controller");
 
 const UpdateCourtValidator = require("@/validators/organisation/updateCourt.validator");
 const UpdateCourtController = require("@/controllers/organisation/court/update/updateCourt.controller");
 
 const DeleteCourtController = require("@/controllers/organisation/court/delete/deleteCourt.controller");
+
+
+router.get(
+    "/court-creation-details",
+    SanitizeRequest,
+    GetAllCourtCreationDetailsController
+);
 
 // CREATE
 router.post(
