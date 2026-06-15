@@ -1,12 +1,12 @@
-const Calendar = require("@/models/organisation/calendar.model");
+const Booking = require("@/models/organisation/booking.model");
 
-const UpdateCalendarController = async (request, response) => {
+const UpdateBookingController = async (request, response) => {
     try {
-        const { calendarId } = request.params;
+        const { bookingId } = request.params;
         const userId = request.user.id;
         const updateData = { ...request.body, updatedBy: userId };
 
-        const calendar = await Calendar.findByIdAndUpdate(calendarId, updateData, { new: true, runValidators: true })
+        const booking = await Booking.findByIdAndUpdate(bookingId, updateData, { new: true, runValidators: true })
             .populate("orgId", "name")
             .populate("venueId", "name")
             .populate("sportId", "name")
@@ -14,14 +14,14 @@ const UpdateCalendarController = async (request, response) => {
             .populate("createdBy", "id firstName lastName email")
             .populate("updatedBy", "id firstName lastName email");
 
-        if (!calendar) {
+        if (!booking) {
             return response.status(200).json({
                 code: 400,
                 success: false,
                 error: [
                     {
                         field: "popup",
-                        message: "Calendar entry not found"
+                        message: "booking entry not found"
                     }
                 ],
                 message: ""
@@ -31,9 +31,9 @@ const UpdateCalendarController = async (request, response) => {
         return response.status(200).json({
             code: 200,
             success: true,
-            data: calendar,
+            data: booking,
             error: [],
-            message: "Calendar entry updated successfully."
+            message: "Booking entry updated successfully."
         });
     } catch (error) {
         return response.status(500).json({
@@ -50,4 +50,4 @@ const UpdateCalendarController = async (request, response) => {
     }
 };
 
-module.exports = UpdateCalendarController;
+module.exports = UpdateBookingController;

@@ -1,10 +1,10 @@
-const Calendar = require("@/models/organisation/calendar.model");
+const Booking = require("@/models/organisation/booking.model");
 
-const GetCalendarByIdController = async (request, response) => {
+const GetBookingByIdController = async (request, response) => {
     try {
-        const { calendarId } = request.params;
+        const { bookingId } = request.params;
 
-        const calendar = await Calendar.findById(calendarId)
+        const booking = await Booking.findById(bookingId)
             .populate("orgId", "name")
             .populate("venueId", "name")
             .populate("sportId", "name")
@@ -12,14 +12,14 @@ const GetCalendarByIdController = async (request, response) => {
             .populate("createdBy", "id firstName lastName email")
             .populate("updatedBy", "id firstName lastName email");
 
-        if (!calendar) {
+        if (!booking) {
             return response.status(200).json({
                 code: 400,
                 success: false,
                 error: [
                     {
                         field: "popup",
-                        message: "Calendar entry not found"
+                        message: "Booking entry not found"
                     }
                 ],
                 message: ""
@@ -29,9 +29,9 @@ const GetCalendarByIdController = async (request, response) => {
         return response.status(200).json({
             code: 200,
             success: true,
-            data: calendar,
+            data: booking,
             error: [],
-            message: "Calendar entry fetched successfully."
+            message: "Booking entry fetched successfully."
         });
     } catch (error) {
         return response.status(500).json({
@@ -48,4 +48,4 @@ const GetCalendarByIdController = async (request, response) => {
     }
 };
 
-module.exports = GetCalendarByIdController;
+module.exports = GetBookingByIdController;

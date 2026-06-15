@@ -1,6 +1,6 @@
 const Booking = require("@/models/organisation/booking.model");
 
-const GetAllCalendarsController = async (request, response) => {
+const GetAllBookingsController = async (request, response) => {
     try {
         const { orgId, venueId, sportId, status, page = 1, limit = 10 } = request.query;
 
@@ -12,7 +12,7 @@ const GetAllCalendarsController = async (request, response) => {
 
         const skip = (page - 1) * limit;
 
-        const calendars = await Booking.find(query)
+        const bookings = await Booking.find(query)
             .populate("orgId", "name")
             .populate("venueId", "name")
             .populate("sportId", "name")
@@ -23,13 +23,13 @@ const GetAllCalendarsController = async (request, response) => {
             .limit(parseInt(limit))
             .sort({ date: -1 });
 
-        const total = await Calendar.countDocuments(query);
+        const total = await Booking.countDocuments(query);
 
         return response.status(200).json({
             code: 200,
             success: true,
             data: {
-                calendars,
+                bookings,
                 pagination: {
                     total,
                     page: parseInt(page),
@@ -38,7 +38,7 @@ const GetAllCalendarsController = async (request, response) => {
                 }
             },
             error: [],
-            message: "Calendar entries fetched successfully."
+            message: "Booking entries fetched successfully."
         });
     } catch (error) {
         return response.status(500).json({
@@ -55,4 +55,4 @@ const GetAllCalendarsController = async (request, response) => {
     }
 };
 
-module.exports = GetAllCalendarsController;
+module.exports = GetAllBookingsController;
