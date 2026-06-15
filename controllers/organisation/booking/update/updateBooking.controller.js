@@ -3,7 +3,7 @@ const Booking = require("@/models/organisation/booking.model");
 const UpdateBookingController = async (request, response) => {
     try {
         const { bookingId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const booking = await Booking.findByIdAndUpdate(bookingId, updateData, { new: true, runValidators: true })
