@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const TPATypeEnum = ["PlayO", "District", "Own"]
-const StatusEnum = ["scheduled", "District", "Own"]
+const StatusEnum = ["scheduled", "refunded", "in_progress", "rescheduled", "completed", "no_show", "cancelled",]
 function capitalizeWords(str) {
     if (!str) return str;
     return str
