@@ -150,8 +150,8 @@ const CreateCalendarController = async (request, response) => {
             while (true) {
                 const bookingCode = generateBookingCode();
 
-                const existing = await Booking.findUnique({
-                    where: { bookingCode }
+                const existing = await Booking.findOne({
+                    bookingCode
                 });
 
                 if (!existing) {
