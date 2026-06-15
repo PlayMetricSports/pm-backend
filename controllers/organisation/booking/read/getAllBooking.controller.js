@@ -17,6 +17,7 @@ const GetAllBookingsController = async (request, response) => {
             .populate("venueId", "name")
             .populate("sportId", "name")
             .populate("timeslotId", "startTime endTime")
+            .populate("courtId", "courtName courtNumber")
             .populate("createdBy", "id firstName lastName email")
             .populate("updatedBy", "id firstName lastName email")
             .skip(skip)
