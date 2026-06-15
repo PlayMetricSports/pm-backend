@@ -3,7 +3,7 @@ const Calendar = require("@/models/organisation/calendar.model");
 const UpdateCalendarController = async (request, response) => {
     try {
         const { calendarId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const calendar = await Calendar.findByIdAndUpdate(calendarId, updateData, { new: true, runValidators: true })

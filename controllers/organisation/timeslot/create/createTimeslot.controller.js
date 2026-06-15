@@ -20,7 +20,7 @@ async function getTimeSlots(orgId, startTime, endTime) {
 const CreateTimeslotController = async (request, response) => {
     try {
         const { slotIndex, orgId, startTime, endTime, timeSlotStatus } = request.body;
-        const userId = request.user.id;
+        const userId = request.user._id;
 
         const findExistingTimeSlots = await getTimeSlots(orgId, startTime, endTime)
         if (findExistingTimeSlots.length !== 0) {

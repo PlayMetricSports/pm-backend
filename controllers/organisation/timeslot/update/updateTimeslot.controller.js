@@ -3,7 +3,7 @@ const Timeslot = require("@/models/organisation/timeslot.model");
 const UpdateTimeslotController = async (request, response) => {
     try {
         const { timeslotId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const timeslot = await Timeslot.findByIdAndUpdate(timeslotId, updateData, { new: true, runValidators: true })

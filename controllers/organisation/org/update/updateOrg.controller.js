@@ -3,7 +3,7 @@ const Org = require("@/models/organisation/org.model");
 const UpdateOrgController = async (request, response) => {
     try {
         const { orgId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const org = await Org.findByIdAndUpdate(orgId, updateData, { new: true, runValidators: true })

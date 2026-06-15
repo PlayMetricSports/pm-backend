@@ -3,7 +3,7 @@ const Sport = require("@/models/organisation/sport.model");
 const UpdateSportController = async (request, response) => {
     try {
         const { sportId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const sport = await Sport.findByIdAndUpdate(sportId, updateData, { new: true, runValidators: true })

@@ -3,7 +3,7 @@ const Venue = require("@/models/organisation/venue.model");
 const UpdateVenueController = async (request, response) => {
     try {
         const { venueId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const venue = await Venue.findByIdAndUpdate(venueId, updateData, { new: true, runValidators: true })

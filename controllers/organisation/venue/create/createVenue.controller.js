@@ -3,7 +3,7 @@ const Venue = require("@/models/organisation/venue.model");
 const CreateVenueController = async (request, response) => {
     try {
         const { name, orgId, address } = request.body;
-        const userId = request.user.id;
+        const userId = request.user._id;
 
         const newVenue = await Venue.create({
             name,

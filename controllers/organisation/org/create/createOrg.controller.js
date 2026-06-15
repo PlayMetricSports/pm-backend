@@ -3,7 +3,7 @@ const Org = require("@/models/organisation/org.model");
 const CreateOrgController = async (request, response) => {
     try {
         const { name, domainUrl, organisationNumber, mainOffice, orgSubDomain } = request.body;
-        const userId = request.user.id;
+        const userId = request.user._id;
 
         const newOrg = await Org.create({
             name,

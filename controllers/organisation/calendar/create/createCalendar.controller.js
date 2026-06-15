@@ -3,7 +3,7 @@ const Calendar = require("@/models/organisation/calendar.model");
 const CreateCalendarController = async (request, response) => {
     try {
         const { orgId, venueId, sportId, timeslotId, date, status, bookingId } = request.body;
-        const userId = request.user.id;
+        const userId = request.user._id;
 
         const newCalendar = await Calendar.create({
             orgId,

@@ -3,7 +3,7 @@ const Court = require("@/models/organisation/court.model");
 const UpdateCourtController = async (request, response) => {
     try {
         const { courtId } = request.params;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const updateData = { ...request.body, updatedBy: userId };
 
         const court = await Court.findByIdAndUpdate(courtId, updateData, { new: true, runValidators: true })

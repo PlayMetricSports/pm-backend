@@ -10,7 +10,7 @@ const handleCatchError = require("@/utils/middleware/errorHandler.middleware")
 const CreateCourtController = async (request, response) => {
     try {
         const { orgId, venueId, sportId, courtNumber, courtName, isMultipurpose = false } = request.body;
-        const userId = request.user.id;
+        const userId = request.user._id;
         const existingCourt = await Court.findOne({ orgId, venueId, sportId: { $in: [sportId] }, courtNumber, courtName, status: "active" })
         if (existingCourt) {
             return response.status(STATUS_CODES.BAD_REQUEST).json(
