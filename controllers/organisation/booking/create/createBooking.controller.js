@@ -180,7 +180,7 @@ const CreateCalendarController = async (request, response) => {
         } = request.body;
 
 
-        const userId = request.user.id;
+        const userId = request.user._id;
 
         const customerName = constructNameObject(firstName, middleName, lastName)
         const customerPhone = constructMobileNumberObject(countryCode, number)

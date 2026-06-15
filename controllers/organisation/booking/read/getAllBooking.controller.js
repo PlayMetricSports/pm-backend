@@ -18,8 +18,8 @@ const GetAllBookingsController = async (request, response) => {
             .populate("sportId", "name")
             .populate("timeslotId", "startTime endTime")
             .populate("courtId", "courtName courtNumber")
-            .populate("createdBy", "id firstName lastName email")
-            .populate("updatedBy", "id firstName lastName email")
+            .populate("createdBy", "_id firstName lastName email")
+            .populate("updatedBy", "_id firstName lastName email")
             .skip(skip)
             .limit(parseInt(limit))
             .sort({ date: -1 });
