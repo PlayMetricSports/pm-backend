@@ -12,15 +12,15 @@ const GetAllOrgsController = async (request, response) => {
                 { orgSubDomain: { $regex: search, $options: "i" } }
             ]
         }
-        if (request.user?.org?._id) {
+        if (request.user?.orgId?._id) {
             matchStage._id = request.user?.orgId?._id
         }
         const query = matchStage
 
 
         const orgs = await Org.find(query)
-            .populate("createdBy", "id firstName lastName email")
-            .populate("updatedBy", "id firstName lastName email")
+            .populate("createdBy", "_id firstName lastName email")
+            .populate("updatedBy", "_id firstName lastName email")
             .skip(skip)
             .limit(parseInt(limit))
             .sort({ createdAt: -1 });
