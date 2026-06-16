@@ -21,7 +21,7 @@ jobs:
         run: npm install
 
       - name: Creating ENV
-        run: cp ../../../../env/pm-backend-production.txt .env && cp ../../../../env/pm-backend-production.txt cronjob/.env
+        run: cp ../../../../env/pm-backend-production.txt .env 
       
       - name: Restart PM2
         run: RUNNER_TRACKING_ID="" && pm2 restart PM-PROD-BACKEND
