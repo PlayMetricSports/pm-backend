@@ -15,7 +15,6 @@ const STATUS_CODES = require('@/utils/helpers/statusCodes.helper')
 
 const Middleware = async (request, response, next) => {
     const tenantId = request.tenantCode || '0001';
-    console.log(request)
     const token = GetToken(request);
     try {
         if (!token) {

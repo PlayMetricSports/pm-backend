@@ -122,6 +122,7 @@ async function fetchOrg(request) {
             subdomain = parts[0];
         }
     }
+    console.log(subdomain)
     return await Org.findOne({ orgSubDomain: subdomain }).lean()
 
 }
@@ -429,6 +430,8 @@ const LoginController = async (request, response) => {
         if (getOrg?._id) {
             matchStage.orgId = getOrg?._id
         }
+
+        console.log(getOrg, matchStage)
         const pipeline = [
             {
                 $match: matchStage
