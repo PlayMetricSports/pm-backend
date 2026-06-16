@@ -4,17 +4,19 @@ const GetAllOrgsController = async (request, response) => {
     try {
         const { page = 1, limit = 10, search = "" } = request.query;
         const skip = (page - 1) * limit;
+        let matchStage = { status: "active" }
+        if (search) {
+            matchStage["$or"] = [
+                { name: { $regex: search, $options: "i" } },
+                { organisationNumber: { $regex: search, $options: "i" } },
+                { orgSubDomain: { $regex: search, $options: "i" } }
+            ]
+        }
+        if (request.user?.org?._id) {
+            matchStage._id = request.user?.orgId?._id
+        }
+        const query = matchStage
 
-        const query = search
-            ? {
-                $or: [
-                    { name: { $regex: search, $options: "i" } },
-                    { organisationNumber: { $regex: search, $options: "i" } },
-                    { orgSubDomain: { $regex: search, $options: "i" } }
-                ],
-                status: "active"
-            }
-            : { status: "active" };
 
         const orgs = await Org.find(query)
             .populate("createdBy", "id firstName lastName email")
