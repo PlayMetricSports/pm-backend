@@ -1,0 +1,30 @@
+name: Deploy PM Backend PROD Server
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: PM-Production-Backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Creating ENV
+        run: cp ../../../../env/pm-backend-production.txt .env && cp ../../../../env/pm-backend-production.txt cronjob/.env
+      
+      - name: Restart PM2
+        run: RUNNER_TRACKING_ID="" && pm2 restart PM-PROD-BACKEND
+
+      - name: Save Running Process
+        run: pm2 save
