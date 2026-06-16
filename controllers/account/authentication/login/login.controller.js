@@ -108,7 +108,23 @@ async function updateLastLoginTime(userId) {
         }
     );
 }
+async function fetchOrg(request) {
+    const Org = require("@/models/organisation/org.model");
 
+    const host = request.headers.host
+    let subdomain = null;
+
+    if (host !== 'playmetric.in' && host !== 'www.playmetric.in') {
+        const parts = host.split('.');
+
+        // sportizo.playmetric.in -> sportizo
+        if (parts.length > 2) {
+            subdomain = parts[0];
+        }
+    }
+    return await Org.findOne({ orgSubDomain: subdomain }).lean()
+
+}
 // async function getStudentProfilePhoto(studentId) {
 //     const studentConversionAdmissionDocumentModel = require("@/models/crm/conversion/studentConversionAdmissionDocument.model");
 //     const GetStorage = require("@/utils/connections/storage/get.storage");
@@ -403,14 +419,19 @@ const LoginController = async (request, response) => {
         let employeeDetails = {}
         // const studentInformation = await StudentInformation.findOne({ admissionNumber: email }).select("userId")
 
+        const getOrg = await fetchOrg(request)
+        let matchStage = {
+            password: encryptedPassword,
+            "loginEmail.address": {
+                $regex: new RegExp(`^${email.trim()}$`, "i")
+            }
+        }
+        if (getOrg?._id) {
+            matchStage.orgId = getOrg?._id
+        }
         const pipeline = [
             {
-                $match: {
-                    password: encryptedPassword,
-                    "loginEmail.address": {
-                        $regex: new RegExp(`^${email.trim()}$`, "i")
-                    }
-                }
+                $match: matchStage
             },
 
             {
