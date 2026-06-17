@@ -30,14 +30,12 @@ const CreateEmployeeController = async (request, response) => {
                 createErrorResponse(STATUS_CODES.CONFLICT, "popup", "Please input valid user-department."));
         }
 
-
-        user = await User.create({
+        let createUserBody = {
             name: {
                 firstName: firstName,
                 middleName: middleName,
                 lastName: lastName
             },
-            orgId,
             email: { address: email },
             loginEmail: { address: email },
             password: password,
@@ -45,24 +43,28 @@ const CreateEmployeeController = async (request, response) => {
             userRoleId: getUserRole?._id || "",
             userDepartmentId: getUserDepartment?._id,
             actionIds: getUserRole?.actionIds || []
-        });
+        }
+        if (userRole == "admin") {
+            createUserBody.orgId = orgId
+        }
+        user = await User.create(createUserBody);
 
         if (user?._id) {
             rollback.add(async () => {
                 await User.deleteOne({ _id: user._id });
             });
 
-
-
-            employee = await Employee.create({
+            let createEmployeeBody = {
                 employeeCode: employeeCode,
-                organization: organization,
                 designation: designation,
                 mobileNumber: { countryCode: countryCode, number: mobileNumber },
                 userId: user?._id,
                 userRoleId: getUserRole?._id,
                 userRoleName: getUserRole?.userRoleName,
-            });
+            }
+
+
+            employee = await Employee.create(createEmployeeBody);
 
             if (employee?._id) {
                 rollback.add(async () => {
