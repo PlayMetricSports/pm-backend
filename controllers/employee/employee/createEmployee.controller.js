@@ -44,7 +44,7 @@ const CreateEmployeeController = async (request, response) => {
             userDepartmentId: getUserDepartment?._id,
             actionIds: getUserRole?.actionIds || []
         }
-        if (userRole == "admin") {
+        if (userRole !== "admin") {
             createUserBody.orgId = orgId
         }
         user = await User.create(createUserBody);
@@ -63,7 +63,7 @@ const CreateEmployeeController = async (request, response) => {
                 userRoleName: getUserRole?.userRoleName,
             }
 
-            if (userRole == "admin") {
+            if (userRole !== "admin") {
                 createEmployeeBody.organization = organization
             }
             employee = await Employee.create(createEmployeeBody);
