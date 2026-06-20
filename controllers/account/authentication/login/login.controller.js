@@ -430,8 +430,10 @@ const LoginController = async (request, response) => {
         if (getOrg?._id) {
             matchStage.orgId = getOrg?._id
         }
+        else {
+            matchStage.userType = "admin"
+        }
 
-        console.log(getOrg, matchStage)
         const pipeline = [
             {
                 $match: matchStage
