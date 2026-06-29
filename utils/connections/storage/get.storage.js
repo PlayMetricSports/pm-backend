@@ -1,4 +1,6 @@
 const storage = require("@/utils/connections/storage/connect.storage");
+const { GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const GetStorage = async (key, storagetype = null) => {
     const params = {
@@ -10,13 +12,20 @@ const GetStorage = async (key, storagetype = null) => {
     let url;
     let signedUrl = null;
     try {
-        // const url = storage.getSignedUrl("getObject", params);
         if (storagetype == "local") {
             url = `${process.env.LOCAL_PUBLIC_URL}/uploads/${key}`
-            signedUrl = `${process.env.LOCAL_PUBLIC_URL}/uploads/${key}`
+            signedUrl = url
         } else {
             url = `${process.env.R2_PUBLIC_URL}/${key}`;
-            signedUrl = storage.getSignedUrl("getObject", params);
+            const command = new GetObjectCommand({
+                Bucket: process.env.R2_BUCKET,
+                Key: key,
+            });
+            signedUrl = await getSignedUrl(
+                storage,
+                command,
+                { expiresIn: 60 * 5 } // 5 minutes
+            );
         }
         data = {
             url,

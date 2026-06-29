@@ -3,8 +3,8 @@ const File = require("@/models/file/file.model");
 const sanitize = require("sanitize-html");
 const formidable = require("formidable");
 const fs = require("fs");
-const storage = require("@/utils/connections/storage/connect.storage");
 const RollbackStorage = require("./rollback.storage");
+const putStorage = require("@/utils/connections/storage/put.storage");
 
 
 function sanitizeFormData(obj) {
@@ -166,25 +166,34 @@ const UploadMultipleStorage = async (request, response, next, allowed, required,
             };
 
             try {
-                storage.putObject(params).promise();
+                await putStorage({
+                    bucketName: process.env.R2_BUCKET,
+                    fileName: name,
+                    fileBuffer: fs.createReadStream(file.filepath),
+                    mimeType: mimetype
+                });
+
                 const addedFile = await File.create({
                     name: originalFilename,
                     alternative_text: originalFilename,
                     caption: originalFilename,
-                    extension: extension,
+                    extension,
                     mime: mimetype,
-                    size: size,
+                    size,
                     url: name,
                     createdBy: request?.user?._id,
                     updatedBy: request?.user?._id,
-                    used: true
+                    used: true,
+                    storage: "R2"
                 });
-                rollbackSafeGuardBucket.push(params)
-                rollbackSafeGuardDatabase.push(addedFile._id)
-                fs.unlink(filepath, (err) => {
-                    if (err) console.error("Temp file cleanup failed:", err);
-                });
-                saveAttachmentDetails(key, field, addedFile._id, index)
+
+                request.body = {
+                    ...sanitized,
+                    file: addedFile._id
+                };
+
+                next();
+
             }
             catch (uploadError) {
                 throw new Error(`${uploadError}`)

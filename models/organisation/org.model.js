@@ -40,8 +40,6 @@ const OrgSchema = mongoose.Schema({
     }
 }, { timestamps: true });
 
-OrgSchema.index({ organisationNumber: 1 });
-OrgSchema.index({ orgSubDomain: 1 });
 OrgSchema.index({ domainUrl: 1 });
 
 module.exports = mongoose.model("Org", OrgSchema);

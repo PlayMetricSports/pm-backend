@@ -41,7 +41,7 @@ async function startV2Server() {
         // await startSocket()
         // Start the server
         const server = v2app.listen(PORT, () => {
-            console.warn(`🚀 Worker ${process.pid} is running on port: ${PORT}`);
+            console.warn(`Worker ${process.pid} is running on port: ${PORT}`);
         });
 
         // ✅ graceful shutdown handlers
@@ -50,7 +50,7 @@ async function startV2Server() {
 
         // eslint-disable-next-line no-inner-declarations
         async function shutdown() {
-            console.warn(`Worker ${process.pid} shutting down...`);
+            console.warn(`\nWorker ${process.pid} shutting down...`);
             server.close(() => {
                 console.log("HTTP server closed.");
             });

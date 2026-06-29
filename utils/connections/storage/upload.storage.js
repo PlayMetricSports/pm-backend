@@ -4,6 +4,7 @@ const sanitize = require("sanitize-html");
 const formidable = require("formidable");
 const fs = require("fs");
 const storage = require("@/utils/connections/storage/connect.storage");
+const putStorage = require("@/utils/connections/storage/put.storage");
 
 
 function sanitizeFormData(obj) {
@@ -162,40 +163,48 @@ const UploadStorage = async (request, response, next, allowed, required, allowed
                 ContentLength: size
             };
 
-            const uploadPromise = storage.putObject(params).promise();
+            try {
+                await putStorage({
+                    bucketName: process.env.R2_BUCKET,
+                    fileName: name,
+                    fileBuffer: fs.createReadStream(file.filepath),
+                    mimeType: mimetype
+                });
 
-            uploadPromise.then(async () => {
                 const addedFile = await File.create({
                     name: originalFilename,
                     alternative_text: originalFilename,
                     caption: originalFilename,
-                    extension: extension,
+                    extension,
                     mime: mimetype,
-                    size: size,
+                    size,
                     url: name,
                     createdBy: request?.user?._id,
                     updatedBy: request?.user?._id,
                     used: true,
                     storage: "R2"
                 });
+
                 request.body = {
                     ...sanitized,
                     file: addedFile._id
                 };
+
                 next();
-            }).catch((uploadError) => {
+
+            } catch (uploadError) {
                 return response.status(500).json({
                     code: 500,
                     success: false,
                     error: [
                         {
                             field: "popup",
-                            message: `Upload Error: ${uploadError}`
+                            message: `Upload Error: ${uploadError.message}`
                         }
                     ],
                     message: ""
                 });
-            });
+            }
         }
         else {
             if (required) {
