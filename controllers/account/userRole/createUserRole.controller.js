@@ -1,6 +1,8 @@
 
 const UserRole = require("@/models/account/userRole.model");
+const Action = require("@/models/action/action.model");
 const { encryptKeys } = require("@/security/rsa.keys.security");
+const { default: mongoose } = require("mongoose");
 
 const CreateUserRoleController = async (request, response) => {
 
@@ -10,8 +12,17 @@ const CreateUserRoleController = async (request, response) => {
         const userRole = await UserRole.create({
             userRoleName: userRoleName,
             userRoleKey: userRoleKey,
-            userType: userType
+            userType: userType,
+            actionIds: [new mongoose.Types.ObjectId("6a1ddf96eb9075e19a1cee98")]
         })
+        const addUserRoleIdIntoAction = await Action.findByIdAndUpdate(
+            "6a1ddf96eb9075e19a1cee98",
+            {
+                $push: {
+                    userRoleId: userRole?._id
+                }
+            }
+        )
         if (userRole?._id) {
             const data = encryptKeys({
                 userRoleId: userRole?._id
