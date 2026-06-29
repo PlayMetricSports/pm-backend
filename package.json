@@ -1,5 +1,5 @@
 {
-    "name": "esc-backend",
+    "name": "pm-backend",
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
@@ -30,10 +30,11 @@
     "author": "Edovu Ventures",
     "license": "ISC",
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.1075.0",
+        "@aws-sdk/s3-request-presigner": "^3.1075.0",
         "@google-cloud/translate": "^9.4.1",
         "@google/generative-ai": "^0.24.1",
         "@socket.io/redis-adapter": "^8.3.0",
-        "aws-sdk": "^2.1647.0",
         "axios": "^1.15.2",
         "body-parser": "^1.20.2",
         "bullmq": "^5.76.5",
