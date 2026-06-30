@@ -8,7 +8,7 @@ const GetDashboardDataController = require("@/controllers/organisation/dashboard
 
 const Middleware = require("@/utils/middleware/middleware");
 
-
+// GET /api/v1/organisation/dashboard/details
 router.get(
     "/details",
     SanitizeRequest,
