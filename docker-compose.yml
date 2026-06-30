@@ -1,0 +1,12 @@
+name: pm-backend
+services:
+  pm-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pm-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "9112:9112"

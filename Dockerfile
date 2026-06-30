@@ -7,10 +7,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --omit=dev
+RUN npm i --omit=dev
 
 # Copy application code
 COPY . .
+
+
+ENV NODE_ENV=production
 
 # Expose application port
 EXPOSE 9112
