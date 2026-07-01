@@ -7,6 +7,7 @@ const timeslotRoutes = require('./timeslot.route');
 const bookingRoutes = require('./booking.route');
 const dashboardRoutes = require('./dashboard.route');
 const courtRoutes = require('./court.route');
+const venueTransactionsRoutes = require('./venue-transactions.route');
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use("/timeslot", timeslotRoutes);
 router.use("/booking", bookingRoutes);
 router.use("/court", courtRoutes);
 router.use("/dashboard", dashboardRoutes);
+router.use("/venue-transactions", venueTransactionsRoutes);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const handleCatchError = require("@/utils/middleware/errorHandler.middleware")
 
 const Booking = require("@/models/organisation/booking.model");
 
-const GetDashboardDataController = async (request, response) => {
+const GetRevenueDataController = async (request, response) => {
     const userOrgId = request.user?.orgId?._id
     let matchCondition = {
         status: { $in: ["rescheduled", "scheduled"] },
@@ -63,103 +63,11 @@ const GetDashboardDataController = async (request, response) => {
     }
 
     matchCondition = { ...matchCondition, ...ValidateQueryFiltersAndInsert({ venueId, sportId, courtId }) }
+
     const revenueAndBookingpipeline = [
         {
             $match: matchCondition
         },
-        {
-            $group: {
-                _id: {
-                    TPA: "$TPA",
-                    venueId: "$venueId",
-                    sportId: "$sportId",
-                    courtId: "$courtId"
-                },
-
-                bookingCount: { $sum: 1 },
-                totalAmount: { $sum: "$finDetails.totalAmount" }
-            }
-        },
-        {
-            $group: {
-                _id: {
-                    TPA: "$_id.TPA",
-                    venueId: "$_id.venueId",
-                    sportId: "$_id.sportId"
-                },
-
-
-                sportTotalAmount: { $sum: "$totalAmount" },
-                sportActiveBookings: { $sum: "$bookingCount" },
-
-            }
-        },
-        {
-            $group: {
-                _id: {
-                    TPA: "$_id.TPA",
-                    venueId: "$_id.venueId"
-                },
-
-
-                venueTotalAmount: { $sum: "$sportTotalAmount" },
-                venueActiveBookings: { $sum: "$sportActiveBookings" },
-
-            }
-        },
-        {
-            $group: {
-                _id: "$_id.TPA",
-
-                tpaTotalAmount: { $sum: "$venueTotalAmount" },
-                tpaActiveBookings: { $sum: "$venueActiveBookings" },
-
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                TPA: "$_id",
-                totalAmount: "$tpaTotalAmount",
-                totalBooking: "$tpaActiveBookings",
-            }
-        }
-    ]
-    const customerBaseMatch = {
-        ...ValidateQueryFiltersAndInsert({ orgId: matchCondition.orgId, venueId, sportId, courtId })
-    };
-    const newClientsPipeline = [
-        {
-            $match: customerBaseMatch
-        },
-        {
-            $group: {
-                _id: "$customerPhone.number",
-                firstBookingDate: {
-                    $min: "$bookingDate"
-                }
-            }
-        },
-        {
-            $match: {
-                firstBookingDate: matchCondition.bookingDate
-            }
-        },
-        {
-            $count: "newCustomers"
-        }
-    ]
-    const upcomingMatch = {
-        ...matchCondition,
-        bookingDate: {
-            $gte: new Date(new Date().setHours(0, 0, 0, 0))
-        }
-    };
-    const upcomingBookingPipeline = [
-        {
-            $match: upcomingMatch
-        },
-
         {
             $lookup: {
                 from: "venues",
@@ -189,59 +97,99 @@ const GetDashboardDataController = async (request, response) => {
             }
         },
         { $unwind: "$court" },
-        { $unwind: "$timeslotId" },
         {
-            $lookup: {
-                from: "timeslots",
-                localField: "timeslotId",
-                foreignField: "_id",
-                as: "timeslots"
+            $group: {
+                _id: {
+                    TPA: "$TPA",
+                    venueId: "$venue._id",
+                    sportId: "$sport._id",
+                    courtId: "$court._id"
+                },
+                venue: { $first: "$venue" },
+                sport: { $first: "$sport" },
+                court: { $first: "$court" },
+
+                bookingCount: { $sum: 1 },
+                totalAmount: { $sum: "$finDetails.totalAmount" }
             }
         },
-        { $unwind: "$timeslots" },
+        {
+            $group: {
+                _id: {
+                    TPA: "$_id.TPA",
+                    venueId: "$_id.venueId",
+                    sportId: "$_id.sportId"
+                },
+                venue: { $first: "$venue" },
+                sport: { $first: "$sport" },
 
+                sportTotalAmount: { $sum: "$totalAmount" },
+                sportActiveBookings: { $sum: "$bookingCount" },
+                courts: {
+                    $push: {
+                        _id: "$court._id",
+                        courtName: "$court.courtName",
+                        courtNumber: "$court.courtNumber",
+                        isMultipurpose: "$court.isMultipurpose",
+                        bookingCount: "$bookingCount",
+                        totalAmount: "$totalAmount"
+                    }
+                }
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    TPA: "$_id.TPA",
+                    venueId: "$_id.venueId"
+                },
+                venue: { $first: "$venue" },
+
+                venueTotalAmount: { $sum: "$sportTotalAmount" },
+                venueActiveBookings: { $sum: "$sportActiveBookings" },
+
+                sports: {
+                    $push: {
+                        _id: "$sport._id",
+                        name: "$sport.name",
+                        totalAmount: "$sportTotalAmount",
+                        courts: "$courts"
+                    }
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$_id.TPA",
+
+                tpaTotalAmount: { $sum: "$venueTotalAmount" },
+                tpaActiveBookings: { $sum: "$venueActiveBookings" },
+
+                venues: {
+                    $push: {
+                        _id: "$venue._id",
+                        name: "$venue.name",
+                        totalAmount: "$venueTotalAmount",
+                        sports: "$sports"
+                    }
+                }
+            }
+        },
         {
             $project: {
-                venueName: "$venue.name",
-                sportName: "$sport.name",
-                courtNumber: "$court.courtNumber",
-                courtName: "$court.courtName",
-                startTime: "$timeslots.startTime",
-                endTime: "$timeslots.endTime",
-                customerName: 1,
-                customerEmail: 1,
-                customerPhone: 1,
-                status: 1
+                _id: 0,
+                TPA: "$_id",
+                totalAmount: "$tpaTotalAmount",
+                totalBooking: "$tpaActiveBookings",
+                venues: 1
             }
-        },
-
+        }
     ]
 
-    // const result = await Booking.aggregate([
-    //     {
-    //         $facet: {
-    //             revenue: revenuePipeline,
-    //             newCustomers: newCustomerPipeline,
-    //             upcomingBookings: upcomingPipeline
-    //         }
-    //     }
-    // ]);
+    const totalBookings = await Booking.aggregate(revenueAndBookingpipeline)
 
-
-    // const totalNewCustomers = result[0].newCustomers[0]?.newCustomers || 0;
-
-    // const data = { totalBookings: result[0].revenue, totalNewCustomers, upcomingBooking: result[0].upcomingBookings }
-
-
-    const [totalBookings, newCustomers, upcomingBooking] = await Promise.all([
-        Booking.aggregate(revenueAndBookingpipeline),
-        Booking.aggregate(newClientsPipeline),
-        Booking.aggregate(upcomingBookingPipeline)
-    ]);
-    const totalNewCustomers = newCustomers[0]?.newCustomers || 0;
-
-    const data = { totalBookings, totalNewCustomers, upcomingBooking }
+    const data = { totalBookings }
     return response.status(STATUS_CODES.OK).json(createSuccessResponse(STATUS_CODES.OK, data, "data fetched successfully"))
 }
 
-module.exports = GetDashboardDataController;
+module.exports = GetRevenueDataController;
