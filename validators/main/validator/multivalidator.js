@@ -13,7 +13,6 @@ const ValidateNonEmptyElements = (nonEmptyElements) => {
     let error = [];
 
     for (const [key, value] of Object.entries(nonEmptyElements)) {
-        console.log(key, value)
         if (isEmpty(value)) {
             let fieldName = key.replace(/([A-Z])/g, ' $1').toLowerCase();  // Format the field name (camelCase to sentence case)
             error.push({

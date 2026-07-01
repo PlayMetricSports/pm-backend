@@ -15,7 +15,7 @@ const GetDashboardDataController = async (request, response) => {
             matchCondition.orgId = userOrgId
         }
         else {
-            const { orgId } = request.body
+            const { orgId } = request.query
             matchCondition.orgId = orgId
         }
     }
@@ -24,7 +24,7 @@ const GetDashboardDataController = async (request, response) => {
         return response.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json(createErrorResponse(STATUS_CODES.INTERNAL_SERVER_ERROR, "userOrgError", userOrgError.message))
     }
 
-    const { venueId, sportId, courtId, duration } = request.body
+    const { venueId, sportId, courtId, duration } = request.query
     const error = ValidateNonEmptyElements({ duration })
     if (error.length > 0) {
         return response.status(STATUS_CODES.NOT_FOUND).json(createErrorResponse(STATUS_CODES.NOT_FOUND, error[0].field, error[0].message))
