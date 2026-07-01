@@ -16,7 +16,9 @@ const GetDashboardDataController = async (request, response) => {
         }
         else {
             const { orgId } = request.query
-            matchCondition.orgId = orgId
+            if (orgId && ValidateMongooseObjectIds(orgId)) {
+                matchCondition.orgId = orgId
+            }
         }
     }
     catch (userOrgError) {
@@ -60,8 +62,8 @@ const GetDashboardDataController = async (request, response) => {
         };
     }
 
-
     matchCondition = { ...matchCondition, ...ValidateQueryFiltersAndInsert({ venueId, sportId, courtId }) }
+    console.log(matchCondition)
     const revenueAndBookingpipeline = [
         {
             $match: matchCondition
