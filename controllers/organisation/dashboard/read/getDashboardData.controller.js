@@ -63,7 +63,6 @@ const GetDashboardDataController = async (request, response) => {
     }
 
     matchCondition = { ...matchCondition, ...ValidateQueryFiltersAndInsert({ venueId, sportId, courtId }) }
-    console.log(matchCondition)
     const revenueAndBookingpipeline = [
         {
             $match: matchCondition
